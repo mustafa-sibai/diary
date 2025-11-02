@@ -1,0 +1,27 @@
+version: "3"
+
+tasks:
+  install-tools:
+    desc: Install development tools
+    cmds:
+      - go install github.com/air-verse/air@latest
+
+  dev:
+    desc: Run app with auto-reload
+    cmds:
+      - air
+
+  build:
+    desc: Build the application
+    cmds:
+      - go build -o bin/app .
+
+  run:
+    desc: Run the application
+    cmds:
+      - go run .
+
+  tidy:
+    desc: Tidy dependencies
+    cmds:
+      - go mod tidy
