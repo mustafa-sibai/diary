@@ -1,27 +1,54 @@
 version: "3"
 
+env:
+  CGO_ENABLED: 1
+
 tasks:
   install-tools:
     desc: Install development tools
     cmds:
+      - choco install mingw
       - go install github.com/air-verse/air@latest
+
+  install-deps:
+    desc: Download project dependencies
+    dir: src
+    cmds:
+      - go mod download
+      - go mod tidy
+
+  setup:
+    desc: Setup project (tools + dependencies)
+    cmds:
+      - task: install-tools
+      - task: install-deps
 
   dev:
     desc: Run app with auto-reload
+    dir: src
     cmds:
       - air
 
+  clean:
+    desc: Clean build artifacts
+    cmds:
+      - powershell -Command "if (Test-Path bin) { Remove-Item -Recurse -Force bin }"
+      - powershell -Command "if (Test-Path tmp) { Remove-Item -Recurse -Force tmp }"
+
   build:
     desc: Build the application
+    dir: src
     cmds:
-      - go build -o bin/app .
+      - go build -o ../bin/app .
 
   run:
     desc: Run the application
+    dir: src
     cmds:
       - go run .
 
   tidy:
     desc: Tidy dependencies
+    dir: src
     cmds:
       - go mod tidy
